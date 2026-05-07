@@ -1,4 +1,4 @@
-import { Container } from "./core/container.js";
+import { SummerContainer } from "./core/container.js";
 import { Injectable } from "./decorators/injectable.js";
 
 class Test {
@@ -36,7 +36,7 @@ class Pet {
   }
 }
 
-const container = new Container()
+const container = new SummerContainer()
 container.register(User);
 container.register(Pet);
 const user = container.resolve(User)

@@ -1,10 +1,10 @@
-import "reflect-metadata"
 import type { ClassRef, Instance, Provider, Token } from "./types/container.js";
 import type { Scope } from "../types/scope.js";
 import type { InjectableParams } from "../decorators/types/injectable.js";
+import { Reflector } from "./reflector.js";
 
 
-export class Container {
+export class SummerContainer {
 
   private registry: Map<Token, Provider>
   private cache: Map<Token, Instance>
@@ -25,7 +25,7 @@ export class Container {
   }
 
   register(ref: ClassRef): void {
-    const isInjectable = Reflect.getMetadata("injectable", ref)
+    const isInjectable = Reflector.get<boolean>("injectable", ref)
     if (!isInjectable) {
       return;
     }
@@ -54,9 +54,9 @@ export class Container {
   }
 
   private extractParams(ref: ClassRef): { deps: ClassRef[], params: InjectableParams } {
-    const deps = Reflect.getMetadata("design:paramtypes", ref) || [];
-    const scope: Scope = Reflect.getMetadata("scope", ref) || "SINGLETON";
-    const lazy: boolean = Reflect.getMetadata("lazy", ref) || false;
+    const deps = Reflector.get<ClassRef[]>("design:paramtypes", ref) || [];
+    const scope = Reflector.get<Scope>("scope", ref) || "SINGLETON";
+    const lazy = Reflector.get<boolean>("lazy", ref) || false;
     return {
       deps, params: { scope, lazy }
     }
